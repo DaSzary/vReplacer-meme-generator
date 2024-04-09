@@ -1,20 +1,22 @@
-import morfeusz2
 import csv
-import random
+import morfeusz2
 
+# Wyciągnięcie rzeczowników z polskich zdań, posiadają one prefix subst:  wg. Morfeusza
 def extractVerbsFromPolishStatements(statement):
+    # Inicjalizacja obiektów
     morfeuszObject = morfeusz2.Morfeusz()
     analysisObject = morfeuszObject.analyse(statement)
 
+    # Prealokacja listy
     verbsPositionList = []
+    # Iteracja po tokenach w naszych zdaniach, jeżeli token jest rzeczownikiem to dodajemy jego pozycję do listy
     for currentToken in analysisObject:
         if currentToken[2][2].startswith("subst"):
             verbsPositionList.append(currentToken[0])
 
-    verbsPositionList = list(dict.fromkeys(verbsPositionList))
+    return list(dict.fromkeys(verbsPositionList))
 
-    return verbsPositionList
-
+# Wyciągnięcie zdań z pliku tekstowego linia po linii
 def extractVerbsFromTextFile(filePath):
     readStatement = []
 
@@ -24,8 +26,8 @@ def extractVerbsFromTextFile(filePath):
 
     return readStatement
 
+# Zapisanie danych do pliku CSV
 def saveToCSV(data, filePath):
-
     with open(filePath, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Statement', 'Verbs'])
@@ -35,20 +37,7 @@ def saveToCSV(data, filePath):
             verbStrings = [str(verb) for verb in verbs] 
             writer.writerow([statement, ', '.join(verbStrings)])
 
-def readCSV(file_path):
-    data = []
-
-    with open(file_path, 'r', newline='', encoding='utf-8') as csvfile:
-        reader = csv.reader(csvfile)
-        next(reader)
-
-        for row in reader:
-            statement, verbs = row
-            verbsList = verbs.split(', ')
-            data.append((statement, verbsList))
-
-    return data
-
+# Przetwarzanie danych, wyciągnięcie rzeczowników z plików tekstowych i zapisanie ich do pliku CSV
 def dataPreprocessing():
     inputFile = "przyslowia.txt"
     outputFile = "przyslowia.csv"
@@ -65,24 +54,8 @@ def dataPreprocessing():
     saveToCSV(data, outputFile)
     print(f"Dane zapisano w {outputFile}")
 
-def replaceWordAtIndex(inputString, index, newWord):
-    words = inputString.split()
-
-    if 0 <= index < len(words):
-        words[index] = newWord
-        return ' '.join(words)
-    else:
-        return inputString 
-
-def randomSentenceSubstitution(wordToInsert = "pipi"):
-    data = readCSV("przyslowia.csv")
-    statementNumber = random.randint(0, len(data))
-    wordNumber = int(random.choice(data[statementNumber][1]))
-    replacedSentence = replaceWordAtIndex(data[statementNumber][0], wordNumber, wordToInsert)
-    print(replacedSentence)
-
 def main():
-    randomSentenceSubstitution()
+    dataPreprocessing()
 
 if __name__ == "__main__":
     main()

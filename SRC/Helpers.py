@@ -1,4 +1,5 @@
 import os
+import re
 import csv
 import random
 from PIL import Image, ImageDraw, ImageFont
@@ -27,7 +28,7 @@ def randomSentence(filePath):
 
 # Zamiana wybranego rzeczownika na podany w zdaniu
 def replaceWordAtIndex(inputString, index, newWord):
-    words = inputString.split()
+    words = re.findall(r"\w+|[^\w\s]" , inputString)
 
     if 0 <= index < len(words):
         words[index] = newWord

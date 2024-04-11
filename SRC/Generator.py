@@ -4,9 +4,9 @@ from Helpers import randomSentence, replaceWordAtIndex, splitStringInHalf, makeM
 
 class Generator():
     def __init__(self, params={}) -> None:
-        self.dataFile = "../przyslowia.csv" if 'dataFile' not in params.keys() else params['dataFile']
-        self.imageFolder = "../IMAGES" if 'imageFolder' not in params.keys() else params['imageFolder']
-        self.fontFile = "../FONTS/Impact.ttf" if 'fontFile' not in params.keys() else params['fontFile']
+        self.dataFile = "./przyslowia.csv" if 'dataFile' not in params.keys() else params['dataFile']
+        self.imageFolder = "./IMAGES" if 'imageFolder' not in params.keys() else params['imageFolder']
+        self.fontFile = "./FONTS/Impact.ttf" if 'fontFile' not in params.keys() else params['fontFile']
         self.aiURL = "Not set!" if 'aiURL' not in params.keys() else params['aiURL']
         #self.aiPrompt = "Not set!" if 'aiPrompt' not in params.keys() else params['aiPrompt']
         self.currentBuffer = {"text": None,

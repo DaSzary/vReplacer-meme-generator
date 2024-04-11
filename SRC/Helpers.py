@@ -45,7 +45,7 @@ def makeMeme(topString, bottomString, inputFilename, outputFilename = "output.jp
 
     # find biggest font size that works
     fontSize = int(imageSize[1]/1)
-    font = ImageFont.truetype("../FONTS/Impact.ttf", fontSize)
+    font = ImageFont.truetype("./FONTS/Impact.ttf", fontSize)
     topTextSize = font.getsize(topString)
     bottomTextSize = font.getsize(bottomString)
     while topTextSize[0] > imageSize[0]-20 or bottomTextSize[0] > imageSize[0]-20:

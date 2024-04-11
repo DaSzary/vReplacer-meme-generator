@@ -1,7 +1,12 @@
 import os
 import csv
 import random
+import time
+import requests
 from PIL import Image, ImageDraw, ImageFont
+from dotenv import load_dotenv
+
+
 
 # Odczytanie pliku CSV z przyslowiami
 def readCSV(filePath):
@@ -30,7 +35,7 @@ def replaceWordAtIndex(inputString, index, newWord):
 
 # Odczytanie przyslow, wybranie losowego, zastapienie losowego rzeczownika w przyslowiu
 def randomSentenceSubstitution(wordToInsert = "pipi"):
-    data = readCSV("przyslowia.csv")
+    data = readCSV("../przyslowia.csv")
     statementNumber = random.randint(0, len(data))
     wordNumber = int(random.choice(data[statementNumber][1]))
     return replaceWordAtIndex(data[statementNumber][0], wordNumber, wordToInsert)
@@ -44,12 +49,12 @@ def makeMeme(topString, bottomString, inputFilename, outputFilename = "output.jp
 
 	# find biggest font size that works
 	fontSize = int(imageSize[1]/1)
-	font = ImageFont.truetype("FONTS/Impact.ttf", fontSize)
+	font = ImageFont.truetype("../FONTS/Impact.ttf", fontSize)
 	topTextSize = font.getsize(topString)
 	bottomTextSize = font.getsize(bottomString)
 	while topTextSize[0] > imageSize[0]-20 or bottomTextSize[0] > imageSize[0]-20:
 		fontSize = fontSize - 1
-		font = ImageFont.truetype("FONTS/Impact.ttf", fontSize)
+		font = ImageFont.truetype("../FONTS/Impact.ttf", fontSize)
 		topTextSize = font.getsize(topString)
 		bottomTextSize = font.getsize(bottomString)
 
@@ -83,17 +88,37 @@ def splitStringInHalf(inputText):
     return ' '.join(words[:half]), ' '.join(words[half:])
 
 # Wybranie losowego obrazka
-def obtainRandomImage(filePath = "IMAGES"):
+def obtainRandomImage(filePath = "../IMAGES"):
      imageFiles = os.listdir(filePath)
      imageFiles = [file for file in imageFiles if file.endswith((".jpg", ".png", ".webp"))]
      randomImage = random.choice(imageFiles)
      return os.path.join(filePath, randomImage)
 
+# Sprawdzenie zdania przez ai
+def checkSpelling(message : str) -> str:
+    data = {
+        "model": "bielik4",
+        "prompt": f'Popraw zdanie w nawiasach tylko przez odmianę słów [{message}]. Twoja odpowiedź musi zawierać tylko poprawione zdanie po polsku i nic więcej.',
+        "stream": False
+    }
+
+    response = requests.post(os.getenv('URL'), json=data)
+    return response.json()['response']
+
 # Główna funkcja
 def main():
-    currentSentence = randomSentenceSubstitution()
-    firstHalfOfSentence, secondHalfOfSentence = splitStringInHalf(currentSentence)
+    load_dotenv()
+    currentSentence = randomSentenceSubstitution("pipi")
+    print("sentence to check: ")
+    print(currentSentence)
+    start = time.time()
+    correctedSentence = checkSpelling(currentSentence)
+    print("sentence after correction: ")
+    print(correctedSentence)
+    firstHalfOfSentence, secondHalfOfSentence = splitStringInHalf(correctedSentence)
     makeMeme(firstHalfOfSentence, secondHalfOfSentence, obtainRandomImage(), "output.jpg")  
+    end = time.time()
+    print(f'Time of request: {end-start}')
 
 if __name__ == "__main__":
     main()

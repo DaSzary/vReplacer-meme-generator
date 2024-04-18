@@ -22,7 +22,7 @@ def main():
     start = time.time()
     generator.checkSpelling()
     end = time.time()
-    generator.generateImage()
+    generator.generateImage("outputfile.jpg")
     print(f'Time of request: {end-start}')
 
 if __name__ == "__main__":

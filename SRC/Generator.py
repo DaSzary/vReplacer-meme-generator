@@ -11,7 +11,7 @@ class Generator():
         self.aiURL = None
         self.aiPrompt = None
         self.currentBuffer = {"text": None,
-                              "nounIndex": []}
+                              "substitutionIndex": []}
         self.setParams(params)
 
     def setParams(self, params = {}):
@@ -42,11 +42,11 @@ class Generator():
     def loadRandomSentence(self):
         if self.dataFile is None:
             raise Exception("Data path not specified!")
-        self.currentBuffer["text"], self.currentBuffer["nounIndex"] = Helpers.randomSentence(self.dataFile)
+        self.currentBuffer["text"], self.currentBuffer["substitutionIndex"] = Helpers.randomSentence(self.dataFile)
     
-    def changeRandomNoun(self, wordToChange):
-        if self.currentBuffer["nounIndex"]:
-            wordNumber = int(random.choice(self.currentBuffer["nounIndex"].pop()))
+    def changeRandomWord(self, wordToChange):
+        if self.currentBuffer["substitutionIndex"]:
+            wordNumber = int(random.choice(self.currentBuffer["substitutionIndex"].pop()))
             self.currentBuffer["text"] = Helpers.replaceWordAtIndex(self.currentBuffer["text"], wordNumber, wordToChange)
         else:
             raise Exception("Sentence not loaded or no more nouns to change!")
@@ -66,7 +66,7 @@ class Generator():
         }
 
         response = requests.post(self.aiURL, json=data)
-        self.currentBuffer["nounIndex"] = None
+        self.currentBuffer["substitutionIndex"] = None
         self.currentBuffer["text"] = response.json()['response']
 
     def generateImage(self, outputFile = "output.jpg"):

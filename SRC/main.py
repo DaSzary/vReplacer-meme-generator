@@ -18,7 +18,7 @@ def main():
     generator = Generator(params)
     generator.loadRandomSentence()
     print(generator.currentBuffer)
-    generator.changeRandomNoun("pipi")
+    generator.changeRandomWord("pipi")
     print(generator.currentBuffer)
     start = time.time()
     generator.checkSpelling()

@@ -7,9 +7,18 @@ from Generator import Generator
 # Główna funkcja
 def main():
     load_dotenv()
-    currentSentence = randomSentenceSubstitution("pipi")
-    print("sentence to check: ")
-    print(currentSentence)
+    params = {
+            "dataFile": "./przyslowia.csv",
+            "imageFolder": "./IMAGES",
+            "fontFile": "./FONTS/impact.ttf",
+            "aiURL": os.getenv("URL"),
+            "aiPrompt": 'Popraw zdanie w nawiasach tylko przez odmianę słów [{text}]. Twoja odpowiedź musi zawierać tylko poprawione zdanie po polsku i nic więcej.'
+            }
+    generator = Generator(params)
+    generator.loadRandomSentence()
+    print(generator.currentBuffer)
+    generator.changeRandomNoun("pipi")
+    print(generator.currentBuffer)
     start = time.time()
     generator.checkSpelling()
     end = time.time()

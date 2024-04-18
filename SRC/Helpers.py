@@ -38,19 +38,19 @@ def replaceWordAtIndex(inputString, index, newWord):
 
 # Credits: https://github.com/danieldiekmeier/memegenerator/tree/master
 # Robienie mema
-def makeMeme(topString, bottomString, inputFilename, outputFilename = "output.jpg"):
+def makeMeme(topString, bottomString, inputFilename, pathToFont, outputFilename = "output.jpg"):
 
     img = Image.open(inputFilename)
     imageSize = img.size
 
     # find biggest font size that works
     fontSize = int(imageSize[1]/1)
-    font = ImageFont.truetype("./FONTS/Impact.ttf", fontSize)
+    font = ImageFont.truetype(pathToFont, fontSize)
     topTextSize = font.getsize(topString)
     bottomTextSize = font.getsize(bottomString)
     while topTextSize[0] > imageSize[0]-20 or bottomTextSize[0] > imageSize[0]-20:
         fontSize = fontSize - 1
-        font = ImageFont.truetype("../FONTS/Impact.ttf", fontSize)
+        font = ImageFont.truetype(pathToFont, fontSize)
         topTextSize = font.getsize(topString)
         bottomTextSize = font.getsize(bottomString)
 

@@ -7,6 +7,7 @@ class Generator():
         self.dataFile = None
         self.imageFolder = None
         self.fontFile = None
+        self.aiModel = None
         self.aiURL = None
         self.aiPrompt = None
         self.currentBuffer = {"text": None,
@@ -17,6 +18,7 @@ class Generator():
         if 'dataFile' in params.keys(): self.setDataFilePath(params['dataFile'])
         if 'imageFolder' in params.keys(): self.setImageFolderPath(params['imageFolder'])
         if 'fontFile' in params.keys(): self.setFontFilePath(params['fontFile'])
+        if 'aiModel' in params.keys(): self.setAiModel(params['aiModel'])
         if 'aiURL' in params.keys(): self.setAiURL(params['aiURL'])
         if 'aiPrompt' in params.keys(): self.setAiPrompt(params['aiPrompt'])
 
@@ -28,6 +30,8 @@ class Generator():
 
     def setFontFilePath(self, pathToFile : str): self.fontFile = pathToFile
 
+    def setAiModel(self, aiModel : str): self.aiModel = aiModel
+
     def setAiURL(self, URL : str): self.aiURL = URL
 
     def setAiPrompt(self, prompt : str):
@@ -36,15 +40,27 @@ class Generator():
         self.aiPrompt = prompt
 
     def loadRandomSentence(self):
+        if self.dataFile is None:
+            raise Exception("Data path not specified!")
         self.currentBuffer["text"], self.currentBuffer["nounIndex"] = Helpers.randomSentence(self.dataFile)
     
     def changeRandomNoun(self, wordToChange):
-        wordNumber = int(random.choice(self.currentBuffer["nounIndex"].pop()))
-        self.currentBuffer["text"] = Helpers.replaceWordAtIndex(self.currentBuffer["text"], wordNumber, wordToChange)
+        if self.currentBuffer["nounIndex"]:
+            wordNumber = int(random.choice(self.currentBuffer["nounIndex"].pop()))
+            self.currentBuffer["text"] = Helpers.replaceWordAtIndex(self.currentBuffer["text"], wordNumber, wordToChange)
+        else:
+            raise Exception("Sentence not loaded or no more nouns to change!")
 
     def checkSpelling(self):
+        if self.aiModel is None:
+            raise Exception("Model not set!")
+        if self.aiURL is None:
+            raise Exception("URL not set!")
+        if self.aiPrompt is None:
+            raise Exception("Prompt not set!")
+        
         data = {
-            "model": "bielik4",
+            "model": self.aiModel,
             "prompt": self.aiPrompt.format(text = self.currentBuffer["text"]),
             "stream": False
         }
@@ -54,5 +70,12 @@ class Generator():
         self.currentBuffer["text"] = response.json()['response']
 
     def generateImage(self, outputFile = "output.jpg"):
+        if self.imageFolder is None:
+            raise Exception("Image folder path not set!")
+        if self.fontFile is None:
+            raise Exception("Font file path not set!")
+        if self.currentBuffer["text"] is None:
+            raise Exception("Text not set!")
+        
         firstHalfOfSentence, secondHalfOfSentence = Helpers.splitStringInHalf(self.currentBuffer["text"])
-        Helpers.makeMeme(firstHalfOfSentence, secondHalfOfSentence, Helpers.obtainRandomImage(self.imageFolder), self.fontFile, "output.jpg")  
+        Helpers.makeMeme(firstHalfOfSentence, secondHalfOfSentence, Helpers.obtainRandomImage(self.imageFolder), self.fontFile, outputFile)  

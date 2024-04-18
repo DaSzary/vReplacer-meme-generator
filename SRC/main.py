@@ -11,6 +11,7 @@ def main():
             "dataFile": "./przyslowia.csv",
             "imageFolder": "./IMAGES",
             "fontFile": "./FONTS/impact.ttf",
+            "aiModel": "bielik4",
             "aiURL": os.getenv("URL"),
             "aiPrompt": 'Popraw zdanie w nawiasach tylko przez odmianę słów [{text}]. Twoja odpowiedź musi zawierać tylko poprawione zdanie po polsku i nic więcej.'
             }

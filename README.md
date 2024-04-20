@@ -1,10 +1,11 @@
 # VREPLACER-MEME-GENERATOR
 This tool allows you to create text for memes with the help of locally hosted AI and automatically generate images
+[PyPi link](https://pypi.org/project/VReplacer-Meme-Generator)
 
 ## Usage
 The `Generator` class provides a convenient way to interact with the meme generation functionality. Below is an example of how to use it:
 ```
-from Generator import Generator
+from VReplacer_Meme_Generator import Generator
 
 def main():
     params = {

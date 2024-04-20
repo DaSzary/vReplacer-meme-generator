@@ -1,5 +1,8 @@
 tempCodeRunnerFile.py
 przyslowia.txt
 __pycache__
+build
+dist
+VReplacer_Meme_Generator.egg-info
 *.env
 *.jpg

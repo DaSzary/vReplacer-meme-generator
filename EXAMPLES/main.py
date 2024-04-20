@@ -2,7 +2,7 @@ import time
 import os
 from dotenv import load_dotenv
 
-from VReplacer_Meme_Generator.Generator import Generator
+from VReplacer_Meme_Generator import Generator
 
 # Główna funkcja
 def main():
@@ -21,7 +21,7 @@ def main():
     generator.changeRandomWord("pipi")
     print(generator.currentBuffer)
     start = time.time()
-    #generator.checkSpelling()
+    generator.checkSpelling()
     end = time.time()
     generator.generateImage("outputfile.jpg")
     print(f'Time of request: {end-start}')

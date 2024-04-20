@@ -1,6 +1,6 @@
 import random
 import requests
-import Helpers
+from . import _Helpers
 
 class Generator():
     def __init__(self, params = {}) -> None:
@@ -42,12 +42,12 @@ class Generator():
     def loadRandomSentence(self):
         if self.dataFile is None:
             raise Exception("Data path not specified!")
-        self.currentBuffer["text"], self.currentBuffer["substitutionIndex"] = Helpers.randomSentence(self.dataFile)
+        self.currentBuffer["text"], self.currentBuffer["substitutionIndex"] = _Helpers.randomSentence(self.dataFile)
     
     def changeRandomWord(self, wordToChange):
         if self.currentBuffer["substitutionIndex"]:
             wordNumber = int(random.choice(self.currentBuffer["substitutionIndex"].pop()))
-            self.currentBuffer["text"] = Helpers.replaceWordAtIndex(self.currentBuffer["text"], wordNumber, wordToChange)
+            self.currentBuffer["text"] = _Helpers.replaceWordAtIndex(self.currentBuffer["text"], wordNumber, wordToChange)
         else:
             raise Exception("Sentence not loaded or no more nouns to change!")
 
@@ -77,5 +77,5 @@ class Generator():
         if self.currentBuffer["text"] is None:
             raise Exception("Text not set!")
         
-        firstHalfOfSentence, secondHalfOfSentence = Helpers.splitStringInHalf(self.currentBuffer["text"])
-        Helpers.makeMeme(firstHalfOfSentence, secondHalfOfSentence, Helpers.obtainRandomImage(self.imageFolder), self.fontFile, outputFile)  
+        firstHalfOfSentence, secondHalfOfSentence = _Helpers.splitStringInHalf(self.currentBuffer["text"])
+        _Helpers.makeMeme(firstHalfOfSentence, secondHalfOfSentence, _Helpers.obtainRandomImage(self.imageFolder), self.fontFile, outputFile)  
